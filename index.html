@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrecificaFreela</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --bg-soft: #171a21;
+      --card: #1d212b;
+      --text: #e8ebf2;
+      --muted: #99a1b3;
+      --accent: #9cff57;
+      --accent-2: #ff8a3d;
+      --danger: #ff6a6a;
+      --border: #2b3240;
+      --shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top right, #1a1f2b, var(--bg) 40%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .title {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .progress-wrap {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 18px 0 22px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.35s ease;
+    }
+
+    .step-indicator {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #1d212b, #1a1e27);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .step {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .step.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .step h2 {
+      margin-top: 4px;
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label,
+    .group-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #dbe0ec;
+      font-weight: 600;
+      font-size: 0.94rem;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      background: #12151c;
+      border: 1px solid #32394b;
+      color: var(--text);
+      padding: 12px 13px;
+      border-radius: 12px;
+      outline: none;
+      font-size: 0.98rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(156, 255, 87, 0.15);
+    }
+
+    .radio-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .radio-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: #12151c;
+      border: 1px solid #32394b;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .radio-item input {
+      accent-color: var(--accent);
+    }
+
+    .slider-wrap {
+      margin-bottom: 16px;
+    }
+
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+    }
+
+    .slider-value {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      appearance: none;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #1b1f29;
+      box-shadow: 0 0 0 2px var(--accent);
+      cursor: pointer;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #12151c;
+      border: 1px solid #32394b;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 6px;
+    }
+
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-switch {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #3b4255;
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+
+    .slider-switch:before {
+      content: "";
+      position: absolute;
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      top: 4px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .switch input:checked + .slider-switch {
+      background-color: #5ebf31;
+    }
+
+    .switch input:checked + .slider-switch:before {
+      transform: translateX(22px);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #2a3140;
+      color: #d7deef;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), #b0ff78);
+      color: #18210d;
+      margin-left: auto;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error {
+      margin-top: 8px;
+      color: var(--danger);
+      font-size: 0.9rem;
+      min-height: 1.2em;
+    }
+
+    .result-box {
+      text-align: center;
+      padding: 8px 0 2px;
+    }
+
+    .result-title {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .price {
+      font-size: clamp(1.4rem, 4.5vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 5px 0;
+      color: #f4f7ff;
+    }
+
+    .price span {
+      color: var(--accent);
+    }
+
+    .motivation {
+      margin-top: 12px;
+      color: #ced5e6;
+      font-size: 1rem;
+    }
+
+    .paywall {
+      margin-top: 22px;
+      background: #141822;
+      border: 1px dashed #3f4a62;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+    }
+
+    .paywall h3 {
+      margin: 0 0 10px;
+      font-size: 1.02rem;
+    }
+
+    .paywall ul {
+      margin: 0 0 14px 18px;
+      color: #d1d8e8;
+      padding: 0;
+      line-height: 1.45;
+    }
+
+    .pay-btn {
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent-2), #ffb06f);
+      color: #2b1304;
+      font-size: 0.98rem;
+    }
+
+    @media (min-width: 700px) {
+      .card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <h1 class="title">PrecificaFreela</h1>
+      <p class="subtitle">Simulador de precificacao para freelancers brasileiros</p>
+    </header>
+
+    <div class="progress-wrap" aria-label="Progresso das etapas">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <div id="stepIndicator" class="step-indicator">Etapa 1 de 4</div>
+
+    <section class="card">
+      <form id="wizardForm" novalidate>
+        <div class="step active" data-step="1">
+          <h2>Etapa 1 — Perfil</h2>
+
+          <div class="form-group">
+            <label for="area">Area de atuacao</label>
+            <select id="area" required>
+              <option value="">Selecione</option>
+              <option>Designer</option>
+              <option>Fotografo</option>
+              <option>Dev</option>
+              <option>Social Media</option>
+              <option>Redator</option>
+              <option>Outro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <span class="group-label">Tempo de experiencia</span>
+            <div class="radio-grid">
+              <label class="radio-item"><input type="radio" name="experiencia" value="Menos de 1 ano" /> Menos de 1 ano</label>
+              <label class="radio-item"><input type="radio" name="experiencia" value="1-3 anos" /> 1-3 anos</label>
+              <label class="radio-item"><input type="radio" name="experiencia" value="Mais de 3 anos" /> Mais de 3 anos</label>
+            </div>
+          </div>
+
+          <p class="error" id="error-step-1"></p>
+          <div class="actions">
+            <button type="button" class="btn-secondary" disabled>Voltar</button>
+            <button type="button" class="btn-primary" id="next-1">Continuar</button>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <h2>Etapa 2 — Custos mensais</h2>
+          <div class="form-group">
+            <label for="custosVida">Custos de vida (aluguel, alimentacao, transporte) — R$</label>
+            <input id="custosVida" type="number" min="0" step="0.01" placeholder="Ex.: 3500" />
+          </div>
+          <div class="form-group">
+            <label for="custosFerramentas">Ferramentas e software — R$</label>
+            <input id="custosFerramentas" type="number" min="0" step="0.01" placeholder="Ex.: 450" />
+          </div>
+          <div class="form-group">
+            <label for="outrasDespesas">Outras despesas fixas do trabalho — R$</label>
+            <input id="outrasDespesas" type="number" min="0" step="0.01" placeholder="Ex.: 300" />
+          </div>
+
+          <p class="error" id="error-step-2"></p>
+          <div class="actions">
+            <button type="button" class="btn-secondary back-btn" data-back="1">Voltar</button>
+            <button type="button" class="btn-primary" id="next-2">Continuar</button>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <h2>Etapa 3 — Capacidade de trabalho</h2>
+
+          <div class="slider-wrap">
+            <div class="slider-top">
+              <span>Horas de trabalho por dia</span>
+              <span class="slider-value" id="horasDiaValue">8 h</span>
+            </div>
+            <input id="horasDia" type="range" min="1" max="12" step="1" value="8" />
+          </div>
+
+          <div class="slider-wrap">
+            <div class="slider-top">
+              <span>Dias trabalhados por semana</span>
+              <span class="slider-value" id="diasSemanaValue">5 dias</span>
+            </div>
+            <input id="diasSemana" type="range" min="1" max="7" step="1" value="5" />
+          </div>
+
+          <div class="slider-wrap">
+            <div class="slider-top">
+              <span>% do tempo realmente faturavel</span>
+              <span class="slider-value" id="percentualFaturavelValue">70%</span>
+            </div>
+            <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
+          </div>
+
+          <p class="error" id="error-step-3"></p>
+          <div class="actions">
+            <button type="button" class="btn-secondary back-btn" data-back="2">Voltar</button>
+            <button type="button" class="btn-primary" id="next-3">Continuar</button>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <h2>Etapa 4 — Meta financeira</h2>
+
+          <div class="form-group">
+            <label for="metaMinima">Minimo que precisa tirar por mes — R$</label>
+            <input id="metaMinima" type="number" min="0" step="0.01" placeholder="Ex.: 6000" />
+          </div>
+          <div class="form-group">
+            <label for="metaIdeal">Faturamento ideal por mes — R$</label>
+            <input id="metaIdeal" type="number" min="0" step="0.01" placeholder="Ex.: 12000" />
+          </div>
+          <div class="toggle">
+            <span>Incluir reserva de emergencia (10% do faturamento)</span>
+            <label class="switch">
+              <input id="reserva" type="checkbox" />
+              <span class="slider-switch"></span>
+            </label>
+          </div>
+
+          <p class="error" id="error-step-4"></p>
+          <div class="actions">
+            <button type="button" class="btn-secondary back-btn" data-back="3">Voltar</button>
+            <button type="button" class="btn-primary" id="finishBtn">Ver resultado</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="resultScreen" class="step" data-step="5">
+        <h2>Resultado da sua precificacao</h2>
+        <div class="result-box">
+          <p class="result-title">Com base nas suas informacoes:</p>
+          <p class="price">Seu preco minimo por hora: <span id="precoMinimo">R$ 0,00</span></p>
+          <p class="price">Seu preco ideal por hora: <span id="precoIdeal">R$ 0,00</span></p>
+          <p class="motivation" id="motivacao"></p>
+        </div>
+
+        <div class="paywall">
+          <h3>Relatorio completo premium</h3>
+          <ul>
+            <li>Simulador de projeto (informe as horas e receba o valor ideal)</li>
+            <li>Comparativo com o mercado para sua area</li>
+            <li>Diagnostico: onde seu dinheiro esta vazando</li>
+            <li>PDF exportavel com seu diagnostico</li>
+          </ul>
+          <button class="pay-btn" type="button">Ver meu relatorio completo — R$ 19,90</button>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn-secondary" id="restartBtn">Refazer simulacao</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var currentStep = 1;
+      var totalSteps = 4;
+
+      var steps = document.querySelectorAll(".step[data-step]");
+      var progressBar = document.getElementById("progressBar");
+      var stepIndicator = document.getElementById("stepIndicator");
+      var resultScreen = document.getElementById("resultScreen");
+
+      var data = {
+        area: "",
+        experiencia: "",
+        custosVida: 0,
+        custosFerramentas: 0,
+        outrasDespesas: 0,
+        horasDia: 8,
+        diasSemana: 5,
+        percentualFaturavel: 70,
+        metaMinima: 0,
+        metaIdeal: 0,
+        reserva: false
+      };
+
+      var ids = {
+        area: document.getElementById("area"),
+        custosVida: document.getElementById("custosVida"),
+        custosFerramentas: document.getElementById("custosFerramentas"),
+        outrasDespesas: document.getElementById("outrasDespesas"),
+        horasDia: document.getElementById("horasDia"),
+        diasSemana: document.getElementById("diasSemana"),
+        percentualFaturavel: document.getElementById("percentualFaturavel"),
+        metaMinima: document.getElementById("metaMinima"),
+        metaIdeal: document.getElementById("metaIdeal"),
+        reserva: document.getElementById("reserva"),
+        precoMinimo: document.getElementById("precoMinimo"),
+        precoIdeal: document.getElementById("precoIdeal"),
+        motivacao: document.getElementById("motivacao")
+      };
+
+      var sliderLabels = {
+        horasDiaValue: document.getElementById("horasDiaValue"),
+        diasSemanaValue: document.getElementById("diasSemanaValue"),
+        percentualFaturavelValue: document.getElementById("percentualFaturavelValue")
+      };
+
+      function formatBRL(value) {
+        return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+      }
+
+      function getStepElement(step) {
+        return document.querySelector('.step[data-step="' + step + '"]');
+      }
+
+      function updateProgress() {
+        var pct = currentStep <= totalSteps ? (currentStep / totalSteps) * 100 : 100;
+        progressBar.style.width = pct + "%";
+        stepIndicator.textContent = currentStep <= totalSteps ? ("Etapa " + currentStep + " de 4") : "Resultado";
+      }
+
+      function showStep(step) {
+        currentStep = step;
+        steps.forEach(function (el) { el.classList.remove("active"); });
+        var target = getStepElement(step);
+        if (target) target.classList.add("active");
+        if (step === 5) {
+          resultScreen.classList.add("active");
+        } else {
+          resultScreen.classList.remove("active");
+        }
+        updateProgress();
+      }
+
+      function getErrorEl(step) {
+        return document.getElementById("error-step-" + step);
+      }
+
+      function setError(step, message) {
+        var el = getErrorEl(step);
+        if (el) el.textContent = message || "";
+      }
+
+      function validateStep(step) {
+        setError(step, "");
+        if (step === 1) {
+          data.area = ids.area.value;
+          var checked = document.querySelector('input[name="experiencia"]:checked');
+          data.experiencia = checked ? checked.value : "";
+          if (!data.area || !data.experiencia) {
+            setError(1, "Selecione sua area e experiencia para continuar.");
+            return false;
+          }
+          return true;
+        }
+
+        if (step === 2) {
+          data.custosVida = Number(ids.custosVida.value);
+          data.custosFerramentas = Number(ids.custosFerramentas.value);
+          data.outrasDespesas = Number(ids.outrasDespesas.value);
+          if ([data.custosVida, data.custosFerramentas, data.outrasDespesas].some(function (n) { return Number.isNaN(n) || n < 0; })) {
+            setError(2, "Informe valores validos (maiores ou iguais a zero).");
+            return false;
+          }
+          return true;
+        }
+
+        if (step === 3) {
+          data.horasDia = Number(ids.horasDia.value);
+          data.diasSemana = Number(ids.diasSemana.value);
+          data.percentualFaturavel = Number(ids.percentualFaturavel.value);
+          if (data.horasDia < 1 || data.diasSemana < 1 || data.percentualFaturavel < 10) {
+            setError(3, "Revise os controles de capacidade de trabalho.");
+            return false;
+          }
+          return true;
+        }
+
+        if (step === 4) {
+          data.metaMinima = Number(ids.metaMinima.value);
+          data.metaIdeal = Number(ids.metaIdeal.value);
+          data.reserva = ids.reserva.checked;
+
+          if ([data.metaMinima, data.metaIdeal].some(function (n) { return Number.isNaN(n) || n <= 0; })) {
+            setError(4, "Preencha metas com valores maiores que zero.");
+            return false;
+          }
+          if (data.metaIdeal < data.metaMinima) {
+            setError(4, "A meta ideal precisa ser maior ou igual ao minimo mensal.");
+            return false;
+          }
+          return true;
+        }
+
+        return true;
+      }
+
+      function getMotivacao(area, experiencia) {
+        var prefix = "Voce esta construindo uma base solida. ";
+        if (experiencia === "Mais de 3 anos") {
+          prefix = "Sua bagagem profissional e um diferencial competitivo. ";
+        } else if (experiencia === "1-3 anos") {
+          prefix = "Seu crescimento esta no ritmo certo. ";
+        }
+
+        var byArea = {
+          Designer: "No design, estrategia e repertorio valem ouro: cobre com confianca.",
+          Fotografo: "Seu olhar e sua tecnica geram valor real para cada cliente.",
+          Dev: "Seu codigo resolve problemas de negocio: isso merece precificacao premium.",
+          "Social Media": "Consistencia e resultado em redes sociais geram impacto e receita.",
+          Redator: "Palavras certas vendem e posicionam marcas: seu trabalho move negocios.",
+          Outro: "Seu servico entrega transformacao; precificar bem e sustentar sua evolucao."
+        };
+
+        return prefix + (byArea[area] || byArea.Outro);
+      }
+
+      function calculate() {
+        var horasFaturaveis = (data.horasDia * data.diasSemana * 4.3) * (data.percentualFaturavel / 100);
+        horasFaturaveis = Math.max(horasFaturaveis, 1);
+
+        var custoTotal = data.custosVida + data.custosFerramentas + data.outrasDespesas;
+        var precoMinimoHora = custoTotal / horasFaturaveis;
+        var baseIdeal = data.reserva ? (data.metaIdeal * 1.1) : data.metaIdeal;
+        var precoIdealHora = baseIdeal / horasFaturaveis;
+
+        ids.precoMinimo.textContent = formatBRL(precoMinimoHora);
+        ids.precoIdeal.textContent = formatBRL(precoIdealHora);
+        ids.motivacao.textContent = getMotivacao(data.area, data.experiencia);
+      }
+
+      function updateSliderLabels() {
+        sliderLabels.horasDiaValue.textContent = ids.horasDia.value + " h";
+        sliderLabels.diasSemanaValue.textContent = ids.diasSemana.value + " dias";
+        sliderLabels.percentualFaturavelValue.textContent = ids.percentualFaturavel.value + "%";
+      }
+
+      document.getElementById("next-1").addEventListener("click", function () {
+        if (validateStep(1)) showStep(2);
+      });
+      document.getElementById("next-2").addEventListener("click", function () {
+        if (validateStep(2)) showStep(3);
+      });
+      document.getElementById("next-3").addEventListener("click", function () {
+        if (validateStep(3)) showStep(4);
+      });
+      document.getElementById("finishBtn").addEventListener("click", function () {
+        if (validateStep(4)) {
+          calculate();
+          showStep(5);
+        }
+      });
+
+      document.querySelectorAll(".back-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var backTo = Number(btn.getAttribute("data-back"));
+          showStep(backTo);
+        });
+      });
+
+      document.getElementById("restartBtn").addEventListener("click", function () {
+        showStep(1);
+      });
+
+      ids.horasDia.addEventListener("input", updateSliderLabels);
+      ids.diasSemana.addEventListener("input", updateSliderLabels);
+      ids.percentualFaturavel.addEventListener("input", updateSliderLabels);
+
+      updateSliderLabels();
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
