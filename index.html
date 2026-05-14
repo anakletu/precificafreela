@@ -499,7 +499,7 @@
             <li>Diagnostico: onde seu dinheiro esta vazando</li>
             <li>PDF exportavel com seu diagnostico</li>
           </ul>
-          <button class="pay-btn" type="button">Ver meu relatorio completo — R$ 19,90</button>
+          <button class="pay-btn" type="button" onclick="window.open('https://pay.kiwify.com.br/fytqXeI', '_blank')">Ver meu relatorio completo — R$ 19,90</button>
         </div>
 
         <div class="actions">
@@ -670,7 +670,7 @@
         horasFaturaveis = Math.max(horasFaturaveis, 1);
 
         var custoTotal = data.custosVida + data.custosFerramentas + data.outrasDespesas;
-        var precoMinimoHora = custoTotal / horasFaturaveis;
+        var precoMinimoHora = data.metaMinima / horasFaturaveis;
         var baseIdeal = data.reserva ? (data.metaIdeal * 1.1) : data.metaIdeal;
         var precoIdealHora = baseIdeal / horasFaturaveis;
 
