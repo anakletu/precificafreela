@@ -86,18 +86,15 @@
     }
 
     .step {
-      display: none;
+      display: none !important;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(12px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
     }
 
     .step.active {
-      display: block;
+      display: block !important;
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
     }
 
     .step h2 {
@@ -460,7 +457,6 @@
             </div>
             <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
           </div>
-          </div>
 
           <p class="error" id="error-step-3"></p>
           <div class="actions">
@@ -496,7 +492,7 @@
         </div>
       </form>
 
-      <div id="resultScreen" class="step" data-step="5">
+      <div id="resultScreen" class="step" data-step="5" style="display:none!important">
         <h2>Resultado da sua precificação</h2>
         <div class="result-box">
           <p class="result-title">Com base nas suas informações:</p>
@@ -585,13 +581,15 @@
 
       function showStep(step) {
         currentStep = step;
-        steps.forEach(function (el) { el.classList.remove("active"); });
+        steps.forEach(function (el) { el.classList.remove("active"); el.style.display = ""; });
         var target = getStepElement(step);
-        if (target) target.classList.add("active");
+        if (target) { target.classList.add("active"); target.style.display = "block"; }
         if (step === 5) {
           resultScreen.classList.add("active");
+          resultScreen.style.display = "block";
         } else {
           resultScreen.classList.remove("active");
+          resultScreen.style.display = "none";
         }
         updateProgress();
       }
