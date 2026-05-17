@@ -379,20 +379,23 @@
           <h2>Etapa 1 — Perfil</h2>
 
           <div class="form-group">
-            <label for="area">Area de atuacao</label>
-            <select id="area" required>
-              <option value="">Selecione</option>
-              <option>Designer</option>
-              <option>Fotografo</option>
-              <option>Dev</option>
-              <option>Social Media</option>
-              <option>Redator</option>
-              <option>Outro</option>
-            </select>
+            <label for="areaSearch">Área de atuação</label>
+            <div style="position:relative;">
+              <input
+                id="areaSearch"
+                type="text"
+                placeholder="Ex: Músico, Fotógrafo, Ator, Designer..."
+                autocomplete="off"
+                style="width:100%;background:#12151c;border:1px solid #32394b;color:var(--text);padding:12px 13px;border-radius:12px;outline:none;font-size:0.98rem;transition:border-color 0.2s ease,box-shadow 0.2s ease;"
+              />
+              <div id="areaDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1a1e27;border:1px solid #32394b;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow-y:auto;z-index:100;"></div>
+            </div>
+            <input type="hidden" id="area" />
+            <p style="margin:6px 0 0;font-size:0.82rem;color:var(--muted);">Digite para buscar na lista de rubricas culturais ou escreva livremente.</p>
           </div>
 
           <div class="form-group">
-            <span class="group-label">Tempo de experiencia</span>
+            <span class="group-label">Tempo de experiência</span>
             <div class="radio-grid">
               <label class="radio-item"><input type="radio" name="experiencia" value="Menos de 1 ano" /> Menos de 1 ano</label>
               <label class="radio-item"><input type="radio" name="experiencia" value="1-3 anos" /> 1-3 anos</label>
@@ -602,11 +605,11 @@
       function validateStep(step) {
         setError(step, "");
         if (step === 1) {
-          data.area = ids.area.value;
+          data.area = document.getElementById('area').value.trim();
           var checked = document.querySelector('input[name="experiencia"]:checked');
           data.experiencia = checked ? checked.value : "";
           if (!data.area || !data.experiencia) {
-            setError(1, "Selecione sua area e experiencia para continuar.");
+            setError(1, "Preencha sua área de atuação e tempo de experiência para continuar.");
             return false;
           }
           return true;
@@ -726,6 +729,98 @@
 
       updateSliderLabels();
       updateProgress();
+
+      /* AUTOCOMPLETE ÁREA */
+      var RUBRICAS = [
+        'Acompanhamento de artista estrangeiro','Aderecista','Advogado(a)','Agenciador(a)',
+        'Alimentação - Equipe','Alimentação - Participantes','Analista de big data',
+        'Analista de inteligência artificial','Analista de produção','Analista de sistema',
+        'Antropólogo(a)','Arranjador(a)','Arte-educador(a)','Arte-finalista','Artesão(ã)',
+        'Artista circense','Artista plástico(a)','Assessor(a) de imprensa',
+        'Assistente de animação','Assistente de câmera','Assistente de cenografia',
+        'Assistente de coreografia','Assistente de diretor(a) de arte',
+        'Assistente de iluminação','Assistente de maquiador(a)','Assistente de produção',
+        'Assistente de som','Asssistente de editor(a)','Asssistente de figurino','Ator/atriz',
+        'Audiodescrição','Auxiliar de escritório','Auxiliar de serviços gerais','Bailarino(a)',
+        'Bibliotecário','Bilheteiro','Brigadistas','Cabelereiro(a)','Cantor(a)','Capista',
+        'Capoeirista','Captador(a)','Carpinteiro','Cartunista','Cenógrafo(a)','Cenotécnica(a)',
+        'Cerimonialista','Cientista social','Cinegrafista','Compositor(a)','Consultor(a)',
+        'Consultor(a) em Tecnologia','Contador','Contador(a) de história','Continuista',
+        'Contra-regra','Controller','Coordenador(a) Geral','Coordenador(a) Pedagógica',
+        'Coordenador(a) de produção','Coreógrafo(a)','Costureiro(a)','Criação de artes gráficas',
+        'Criação de audiovisual','Criação de roteiro/texto','Curador(a)','Curadoria',
+        'Dançarino(a)','Desenhista','Desenvolvedor de jogos','Desenvolvimento de roteiro',
+        'Design de animação','Designer','Designer de games','Designer de luz','Designer de som',
+        'Diagramador','Digitalização','Diretor(a) Artística(a)','Diretor(a) Cinematográfico(a)',
+        'Diretor(a) Geral','Diretor(a) Musical','Diretor(a) de arte','Diretor(a) de fotografia',
+        'Diretor(a) de imagem','Diretor(a) de palco ou cena','Diretor(a) de produção',
+        'Discotecário(a)','Dramaturgo(a)','Dublador(a)','Editor(a)','Edição de texto',
+        'Edição de áudio','Elenco','Eletricista','Ensaiador(a)','Entrevistador(a)',
+        'Equipe de Apoio - Staff','Estilista','Figurante','Finalização de áudio','Fisioterapeuta',
+        'Fonoaudiólogo(a)','Fotógrafo(a)','Fotógrafo(a) de cena','Gerente de projetos',
+        'Gestor(a) Financeiro','Gestor(a) de redes sociais','Gestão de redes sociais',
+        'Gravação em estúdio','Historiador(a)','Iluminador(a)','Ilustrador(a)','Ilustração',
+        'Impressão em braile','Influenciador(a) Digital','Instrumentista Musical',
+        'Intérprete de Libras','Locutor(a)','Luthier','Maestro(a)','Maquador(a)','Maquinista',
+        'Marceneiro(a)','Mediador(a)','Membro de comissão julgadora','Mestre de Cerimônia',
+        'Microfonista','Ministrante','Modelista','Monitor(a)','Montador(a)','Motorista',
+        'Museólogo(a)','Música(a)/Intérprete','Músico(a) de base','Músico(a) de complemento',
+        'Músico(a) de coro','Oficineiro(a)','Operador(a) de câmera','Operador(a) de edição',
+        'Operador(a) de luz','Operador(a) de mesa de som','Operador(a) de microfone',
+        'Operador(a) de som','Operador(a) de vídeo','Operador(a) de áudio','Orquetra',
+        'Paisagista','Palestrante','Pesquisador(a)','Pianista','Pintor(a)',
+        'Preparador(a) de elenco','Preparador(a) vocal','Produtor(a) Cinematográfico(a)',
+        'Produtor(a) Executivo(a)','Produtor(a) Local','Produtor(a) cênico',
+        'Produtor(a) de Evento','Produtor(a) de Figurino','Produtor(a) de Podcast',
+        'Produção cênica','Produção de texto','Professor(a)','Professor(a) de canto',
+        'Professor(a) de cinema','Professor(a) de teatro','Profissional de marketing',
+        'Profissional de relações públicas','Programador(a)','Projeto gráfico',
+        'Projeto museológico','Publicitário(a)','Quadrinista','Recepcionista','Redator(a)',
+        'Regente','Registro em foto','Registro em vídeo','Repórter cinematográfico',
+        'Restaurador(a)','Revisão de texto','Roadie','Roteirista','Roteiro',
+        'Secretário(a) de Produção','Segurança','Seviço fotográfico para evento','Social Media',
+        'Sociólogo(a)','Sonoplasta','Supervisor(a) de edição de som','Tecelão(ã)','Tradutor(a)',
+        'Tradutor(a) e adaptador(a)','Tradução','Transmissão simultânea','Tratamento de fotos',
+        'Tratamento de áudio','Técnico(a) de audiovisual','Técnico(a) de palco',
+        'Técnico(a) de som','Técnico(a) efeitos especiais','Técnico(a) em informática',
+        'Urbanista','Vigilante','Vídeo institucional','Web designer','Outro'
+      ];
+
+      var areaSearch = document.getElementById('areaSearch');
+      var areaHidden = document.getElementById('area');
+      var areaDropdown = document.getElementById('areaDropdown');
+
+      function normalizaTexto(t) {
+        return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+
+      areaSearch.addEventListener('input', function () {
+        var q = normalizaTexto(areaSearch.value.trim());
+        areaHidden.value = areaSearch.value.trim();
+        if (!q) { areaDropdown.style.display = 'none'; return; }
+        var matches = RUBRICAS.filter(function (r) {
+          return normalizaTexto(r).indexOf(q) !== -1;
+        }).slice(0, 12);
+        if (!matches.length) { areaDropdown.style.display = 'none'; return; }
+        areaDropdown.innerHTML = matches.map(function (r) {
+          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid #2b3240;" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + '</div>';
+        }).join('');
+        areaDropdown.style.display = 'block';
+      });
+
+      areaSearch.addEventListener('blur', function () {
+        setTimeout(function () { areaDropdown.style.display = 'none'; }, 150);
+      });
+
+      areaSearch.addEventListener('focus', function () {
+        if (areaSearch.value.trim()) areaSearch.dispatchEvent(new Event('input'));
+      });
+
+      window.selecionaArea = function (valor) {
+        areaSearch.value = valor;
+        areaHidden.value = valor;
+        areaDropdown.style.display = 'none';
+      };
     })();
   </script>
 </body>
