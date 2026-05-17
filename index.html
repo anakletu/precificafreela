@@ -88,6 +88,7 @@
     .step {
       display: none;
       opacity: 0;
+      visibility: hidden;
       transform: translateY(12px);
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
@@ -95,6 +96,7 @@
     .step.active {
       display: block;
       opacity: 1;
+      visibility: visible;
       transform: translateY(0);
     }
 
