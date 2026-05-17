@@ -365,7 +365,7 @@
   <main class="app">
     <header class="header">
       <h1 class="title">PrecificaFreela</h1>
-      <p class="subtitle">Simulador de precificacao para freelancers brasileiros</p>
+      <p class="subtitle">Simulador de precificação para freelancers brasileiros</p>
     </header>
 
     <div class="progress-wrap" aria-label="Progresso das etapas">
@@ -413,7 +413,7 @@
         <div class="step" data-step="2">
           <h2>Etapa 2 — Custos mensais</h2>
           <div class="form-group">
-            <label for="custosVida">Custos de vida (aluguel, alimentacao, transporte) — R$</label>
+            <label for="custosVida">Custos de vida (aluguel, alimentação, transporte) — R$</label>
             <input id="custosVida" type="number" min="0" step="0.01" placeholder="Ex.: 3500" />
           </div>
           <div class="form-group">
@@ -453,10 +453,11 @@
 
           <div class="slider-wrap">
             <div class="slider-top">
-              <span>% do tempo realmente faturavel</span>
+              <span>% do tempo realmente faturável</span>
               <span class="slider-value" id="percentualFaturavelValue">70%</span>
             </div>
             <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
+          </div>
           </div>
 
           <p class="error" id="error-step-3"></p>
@@ -470,15 +471,15 @@
           <h2>Etapa 4 — Meta financeira</h2>
 
           <div class="form-group">
-            <label for="metaMinima">Minimo que precisa tirar por mes — R$</label>
+            <label for="metaMinima">Mínimo que precisa tirar por mês — R$</label>
             <input id="metaMinima" type="number" min="0" step="0.01" placeholder="Ex.: 6000" />
           </div>
           <div class="form-group">
-            <label for="metaIdeal">Faturamento ideal por mes — R$</label>
+            <label for="metaIdeal">Faturamento ideal por mês — R$</label>
             <input id="metaIdeal" type="number" min="0" step="0.01" placeholder="Ex.: 12000" />
           </div>
           <div class="toggle">
-            <span>Incluir reserva de emergencia (10% do faturamento)</span>
+            <span>Incluir reserva de emergência (10% do faturamento)</span>
             <label class="switch">
               <input id="reserva" type="checkbox" />
               <span class="slider-switch"></span>
@@ -494,27 +495,27 @@
       </form>
 
       <div id="resultScreen" class="step" data-step="5">
-        <h2>Resultado da sua precificacao</h2>
+        <h2>Resultado da sua precificação</h2>
         <div class="result-box">
-          <p class="result-title">Com base nas suas informacoes:</p>
-          <p class="price">Seu preco minimo por hora: <span id="precoMinimo">R$ 0,00</span></p>
-          <p class="price">Seu preco ideal por hora: <span id="precoIdeal">R$ 0,00</span></p>
+          <p class="result-title">Com base nas suas informações:</p>
+          <p class="price">Seu preço mínimo por hora: <span id="precoMinimo">R$ 0,00</span></p>
+          <p class="price">Seu preço ideal por hora: <span id="precoIdeal">R$ 0,00</span></p>
           <p class="motivation" id="motivacao"></p>
         </div>
 
         <div class="paywall">
-          <h3>Relatorio completo premium</h3>
+          <h3>Relatório completo premium</h3>
           <ul>
             <li>Simulador de projeto (informe as horas e receba o valor ideal)</li>
-            <li>Comparativo com o mercado para sua area</li>
-            <li>Diagnostico: onde seu dinheiro esta vazando</li>
-            <li>PDF exportavel com seu diagnostico</li>
+            <li>Comparativo com o mercado para sua área</li>
+            <li>Diagnóstico: onde seu dinheiro está vazando</li>
+            <li>PDF exportável com seu diagnóstico</li>
           </ul>
-          <button class="pay-btn" type="button" onclick="window.open('https://pay.kiwify.com.br/fytqXeI', '_blank')">Ver meu relatorio completo — R$ 19,90</button>
+          <button class="pay-btn" type="button" onclick="window.open('https://pay.kiwify.com.br/fytqXeI', '_blank')">Ver meu relatório completo — R$ 19,90</button>
         </div>
 
         <div class="actions">
-          <button type="button" class="btn-secondary" id="restartBtn">Refazer simulacao</button>
+          <button type="button" class="btn-secondary" id="restartBtn">Refazer simulação</button>
         </div>
       </div>
     </section>
@@ -620,7 +621,7 @@
           data.custosFerramentas = Number(ids.custosFerramentas.value);
           data.outrasDespesas = Number(ids.outrasDespesas.value);
           if ([data.custosVida, data.custosFerramentas, data.outrasDespesas].some(function (n) { return Number.isNaN(n) || n < 0; })) {
-            setError(2, "Informe valores validos (maiores ou iguais a zero).");
+            setError(2, "Informe valores válidos (maiores ou iguais a zero).");
             return false;
           }
           return true;
@@ -647,7 +648,7 @@
             return false;
           }
           if (data.metaIdeal < data.metaMinima) {
-            setError(4, "A meta ideal precisa ser maior ou igual ao minimo mensal.");
+            setError(4, "A meta ideal precisa ser maior ou igual ao mínimo mensal.");
             return false;
           }
           return true;
@@ -657,20 +658,20 @@
       }
 
       function getMotivacao(area, experiencia) {
-        var prefix = "Voce esta construindo uma base solida. ";
+        var prefix = "Você está construindo uma base sólida. ";
         if (experiencia === "Mais de 3 anos") {
-          prefix = "Sua bagagem profissional e um diferencial competitivo. ";
+          prefix = "Sua bagagem profissional é um diferencial competitivo. ";
         } else if (experiencia === "1-3 anos") {
-          prefix = "Seu crescimento esta no ritmo certo. ";
+          prefix = "Seu crescimento está no ritmo certo. ";
         }
 
         var byArea = {
-          Designer: "No design, estrategia e repertorio valem ouro: cobre com confianca.",
-          Fotografo: "Seu olhar e sua tecnica geram valor real para cada cliente.",
-          Dev: "Seu codigo resolve problemas de negocio: isso merece precificacao premium.",
-          "Social Media": "Consistencia e resultado em redes sociais geram impacto e receita.",
-          Redator: "Palavras certas vendem e posicionam marcas: seu trabalho move negocios.",
-          Outro: "Seu servico entrega transformacao; precificar bem e sustentar sua evolucao."
+          Designer: "No design, estratégia e repertório valem ouro: cobre com confiança.",
+          Fotografo: "Seu olhar e sua técnica geram valor real para cada cliente.",
+          Dev: "Seu código resolve problemas de negócio: isso merece precificação premium.",
+          "Social Media": "Consistência e resultado em redes sociais geram impacto e receita.",
+          Redator: "Palavras certas vendem e posicionam marcas: seu trabalho move negócios.",
+          Outro: "Seu serviço entrega transformação; precificar bem é sustentar sua evolução."
         };
 
         return prefix + (byArea[area] || byArea.Outro);
