@@ -6,83 +6,140 @@
   <title>PrecificaFreela</title>
   <style>
     :root {
-      --bg: #0f1115;
-      --bg-soft: #171a21;
-      --card: #1d212b;
+      /* Paleta mantida: preto/cinza escuro + verde esmeralda */
+      --bg: #090a0f;
+      --bg-2: #0d0f17;
+      --emerald: #10b981;
+      --emerald-soft: #34d399;
+      --emerald-strong: #059669;
+      --accent: var(--emerald);
+      --accent-2: #34d399;
       --text: #e8ebf2;
-      --muted: #99a1b3;
-      --accent: #9cff57;
-      --accent-2: #ff8a3d;
+      --muted: #9aa4b5;
       --danger: #ff6a6a;
-      --border: #2b3240;
-      --shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
-      --radius: 16px;
+      /* Vidro (glassmorphism) */
+      --glass-bg: rgba(20, 24, 33, 0.55);
+      --glass-bg-soft: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border-strong: rgba(16, 185, 129, 0.45);
+      --glass-blur: 18px;
+      --field-bg: rgba(9, 10, 15, 0.5);
+      --field-border: rgba(255, 255, 255, 0.1);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+      --shadow-emerald: 0 10px 30px rgba(16, 185, 129, 0.22);
+      --radius: 18px;
+      --radius-sm: 12px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
     body {
       margin: 0;
       font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-      background: radial-gradient(circle at top right, #1a1f2b, var(--bg) 40%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 24px 12px;
+      padding: 32px 14px;
+      position: relative;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(42rem 42rem at 85% -10%, rgba(16, 185, 129, 0.16), transparent 60%),
+        radial-gradient(38rem 38rem at 0% 110%, rgba(16, 185, 129, 0.1), transparent 55%),
+        linear-gradient(180deg, var(--bg-2), var(--bg) 55%);
+      background-attachment: fixed;
+      overflow-x: hidden;
     }
 
     .app {
       width: 100%;
       max-width: 760px;
+      position: relative;
+      z-index: 1;
+      animation: fade-up 0.5s ease both;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .header {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .title {
       margin: 0 0 8px;
       font-size: clamp(1.5rem, 2.4vw, 2.1rem);
       letter-spacing: 0.3px;
+      font-weight: 800;
     }
 
     .subtitle {
       margin: 0;
       color: var(--muted);
       font-size: 0.98rem;
+      letter-spacing: 0.2px;
     }
 
     .progress-wrap {
-      background: var(--bg-soft);
-      border: 1px solid var(--border);
+      background: var(--glass-bg-soft);
+      border: 1px solid var(--glass-border);
       border-radius: 999px;
       height: 12px;
       overflow: hidden;
       margin: 18px 0 22px;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
     }
 
     .progress-bar {
       height: 100%;
       width: 25%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition: width 0.35s ease;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald), var(--emerald-soft));
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .step-indicator {
       font-size: 0.9rem;
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
     }
 
+    /* Cartão com efeito glassmorphism */
     .card {
-      background: linear-gradient(180deg, #1d212b, #1a1e27);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 18px;
+      padding: 20px;
+      position: relative;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+      backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(16, 185, 129, 0.18) 45%, transparent 70%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     .step {
@@ -95,16 +152,24 @@
       display: block !important;
       opacity: 1;
       visibility: visible;
+      animation: step-in 0.35s ease both;
+    }
+
+    @keyframes step-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .step h2 {
       margin-top: 4px;
-      margin-bottom: 16px;
-      font-size: 1.25rem;
+      margin-bottom: 18px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
     }
 
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     label,
@@ -117,22 +182,32 @@
     }
 
     select,
-    input[type="number"] {
+    input[type="number"],
+    input[type="text"] {
       width: 100%;
-      background: #12151c;
-      border: 1px solid #32394b;
+      background: var(--field-bg);
+      border: 1px solid var(--field-border);
       color: var(--text);
-      padding: 12px 13px;
-      border-radius: 12px;
+      padding: 13px 14px;
+      border-radius: var(--radius-sm);
       outline: none;
       font-size: 0.98rem;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    select::placeholder,
+    input::placeholder {
+      color: #6b7384;
     }
 
     select:focus,
-    input[type="number"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(156, 255, 87, 0.15);
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--glass-border-strong);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+      background: rgba(9, 10, 15, 0.72);
     }
 
     .radio-grid {
@@ -144,51 +219,80 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      background: #12151c;
-      border: 1px solid #32394b;
-      border-radius: 12px;
-      padding: 12px;
+      background: var(--field-bg);
+      border: 1px solid var(--field-border);
+      border-radius: var(--radius-sm);
+      padding: 13px;
       cursor: pointer;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+    }
+
+    .radio-item:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.06);
     }
 
     .radio-item input {
-      accent-color: var(--accent);
+      accent-color: var(--emerald);
+      width: 18px;
+      height: 18px;
     }
 
     .slider-wrap {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .slider-top {
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 0.92rem;
+      color: #c7cedd;
     }
 
     .slider-value {
-      color: var(--accent);
+      color: var(--emerald-soft);
       font-weight: 700;
     }
 
     input[type="range"] {
       width: 100%;
       appearance: none;
+      -webkit-appearance: none;
       height: 7px;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald), var(--emerald-soft));
       outline: none;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
     }
 
     input[type="range"]::-webkit-slider-thumb {
       appearance: none;
+      -webkit-appearance: none;
       width: 20px;
       height: 20px;
       border-radius: 50%;
       background: #fff;
-      border: 2px solid #1b1f29;
-      box-shadow: 0 0 0 2px var(--accent);
+      border: 2px solid #0b1a14;
+      box-shadow: 0 0 0 3px var(--emerald);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #0b1a14;
+      box-shadow: 0 0 0 3px var(--emerald);
       cursor: pointer;
     }
 
@@ -196,11 +300,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #12151c;
-      border: 1px solid #32394b;
-      border-radius: 12px;
-      padding: 12px;
+      gap: 12px;
+      background: var(--field-bg);
+      border: 1px solid var(--field-border);
+      border-radius: var(--radius-sm);
+      padding: 13px;
       margin-bottom: 6px;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
     }
 
     .switch {
@@ -220,9 +327,10 @@
       position: absolute;
       cursor: pointer;
       inset: 0;
-      background-color: #3b4255;
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--glass-border);
       border-radius: 999px;
-      transition: 0.2s;
+      transition: 0.25s;
     }
 
     .slider-switch:before {
@@ -230,15 +338,17 @@
       position: absolute;
       height: 22px;
       width: 22px;
-      left: 4px;
-      top: 4px;
+      left: 3px;
+      top: 3px;
       background-color: white;
       border-radius: 50%;
-      transition: 0.2s;
+      transition: 0.25s;
     }
 
     .switch input:checked + .slider-switch {
-      background-color: #5ebf31;
+      background-color: var(--emerald-strong);
+      border-color: transparent;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.55);
     }
 
     .switch input:checked + .slider-switch:before {
@@ -248,17 +358,18 @@
     .actions {
       display: flex;
       gap: 10px;
-      margin-top: 18px;
+      margin-top: 20px;
       flex-wrap: wrap;
     }
 
     button {
       border: none;
-      border-radius: 12px;
-      padding: 12px 15px;
+      border-radius: var(--radius-sm);
+      padding: 13px 16px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.2s ease;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     button:hover {
@@ -266,24 +377,37 @@
     }
 
     .btn-secondary {
-      background: #2a3140;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
       color: #d7deef;
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .btn-primary {
-      background: linear-gradient(90deg, var(--accent), #b0ff78);
-      color: #18210d;
+      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald));
+      color: #04140d;
       margin-left: auto;
+      box-shadow: var(--shadow-emerald);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
     }
 
     .btn-primary:disabled {
-      opacity: 0.45;
+      opacity: 0.4;
       cursor: not-allowed;
       transform: none;
+      box-shadow: none;
     }
 
     .error {
-      margin-top: 8px;
+      margin-top: 10px;
       color: var(--danger);
       font-size: 0.9rem;
       min-height: 1.2em;
@@ -303,51 +427,60 @@
       font-size: clamp(1.4rem, 4.5vw, 2.4rem);
       font-weight: 800;
       line-height: 1.2;
-      margin: 5px 0;
+      margin: 6px 0;
       color: #f4f7ff;
     }
 
     .price span {
-      color: var(--accent);
+      color: var(--emerald-soft);
+      text-shadow: 0 0 18px rgba(16, 185, 129, 0.45);
     }
 
     .motivation {
-      margin-top: 12px;
+      margin-top: 14px;
       color: #ced5e6;
       font-size: 1rem;
+      line-height: 1.5;
     }
 
     .paywall {
-      margin-top: 22px;
-      background: #141822;
-      border: 1px dashed #3f4a62;
-      border-radius: 14px;
-      padding: 16px;
+      margin-top: 24px;
+      background: var(--glass-bg-soft);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
       text-align: left;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
     }
 
     .paywall h3 {
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       font-size: 1.02rem;
     }
 
     .paywall ul {
-      margin: 0 0 14px 18px;
+      margin: 0 0 16px 18px;
       color: #d1d8e8;
       padding: 0;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     .pay-btn {
       width: 100%;
-      background: linear-gradient(90deg, var(--accent-2), #ffb06f);
-      color: #2b1304;
+      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald-soft));
+      color: #04140d;
       font-size: 0.98rem;
+      box-shadow: var(--shadow-emerald);
+    }
+
+    .pay-btn:hover {
+      box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
     }
 
     @media (min-width: 700px) {
       .card {
-        padding: 24px;
+        padding: 28px;
       }
     }
   </style>
@@ -370,12 +503,12 @@
     <div class="progress-wrap" aria-label="Progresso das etapas">
       <div id="progressBar" class="progress-bar"></div>
     </div>
-    <div id="stepIndicator" class="step-indicator">Etapa 1 de 4</div>
+    <div id="stepIndicator" class="step-indicator">Etapa 1 de 3</div>
 
     <section class="card">
       <form id="wizardForm" novalidate>
         <div class="step active" data-step="1">
-          <h2>Etapa 1 — Perfil</h2>
+          <h2>Etapa 1: Perfil</h2>
 
           <div class="form-group">
             <label for="areaSearch">Área de atuação</label>
@@ -385,9 +518,9 @@
                 type="text"
                 placeholder="Ex: Músico, Fotógrafo, Ator, Designer..."
                 autocomplete="off"
-                style="width:100%;background:#12151c;border:1px solid #32394b;color:var(--text);padding:12px 13px;border-radius:12px;outline:none;font-size:0.98rem;transition:border-color 0.2s ease,box-shadow 0.2s ease;"
+                style="width:100%;background:var(--field-bg);border:1px solid var(--field-border);color:var(--text);padding:13px 14px;border-radius:12px;outline:none;font-size:0.98rem;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color 0.2s ease,box-shadow 0.2s ease;"
               />
-              <div id="areaDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1a1e27;border:1px solid #32394b;border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow-y:auto;z-index:100;"></div>
+              <div id="areaDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:rgba(13,15,23,0.92);border:1px solid var(--glass-border);border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow-y:auto;z-index:100;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,0.5);"></div>
             </div>
             <input type="hidden" id="area" />
             <p style="margin:6px 0 0;font-size:0.82rem;color:var(--muted);">Digite para buscar na lista de rubricas culturais ou escreva livremente.</p>
@@ -410,17 +543,17 @@
         </div>
 
         <div class="step" data-step="2">
-          <h2>Etapa 2 — Custos mensais</h2>
+          <h2>Etapa 2: Custos mensais</h2>
           <div class="form-group">
-            <label for="custosVida">Custos de vida (aluguel, alimentação, transporte) — R$</label>
+            <label for="custosVida">Custos de vida (aluguel, alimentação, transporte) em R$</label>
             <input id="custosVida" type="number" min="0" step="0.01" placeholder="Ex.: 3500" />
           </div>
           <div class="form-group">
-            <label for="custosFerramentas">Ferramentas e software — R$</label>
+            <label for="custosFerramentas">Custos de produção, equipamentos ou deslocamento (R$)</label>
             <input id="custosFerramentas" type="number" min="0" step="0.01" placeholder="Ex.: 450" />
           </div>
           <div class="form-group">
-            <label for="outrasDespesas">Outras despesas fixas do trabalho — R$</label>
+            <label for="outrasDespesas">Outras despesas fixas do trabalho em R$</label>
             <input id="outrasDespesas" type="number" min="0" step="0.01" placeholder="Ex.: 300" />
           </div>
 
@@ -432,7 +565,7 @@
         </div>
 
         <div class="step" data-step="3">
-          <h2>Etapa 3 — Capacidade de trabalho</h2>
+          <h2>Etapa 3: Capacidade e metas</h2>
 
           <div class="slider-wrap">
             <div class="slider-top">
@@ -458,22 +591,12 @@
             <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
           </div>
 
-          <p class="error" id="error-step-3"></p>
-          <div class="actions">
-            <button type="button" class="btn-secondary back-btn" data-back="2">Voltar</button>
-            <button type="button" class="btn-primary" id="next-3">Continuar</button>
-          </div>
-        </div>
-
-        <div class="step" data-step="4">
-          <h2>Etapa 4 — Meta financeira</h2>
-
           <div class="form-group">
-            <label for="metaMinima">Mínimo que precisa tirar por mês — R$</label>
+            <label for="metaMinima">Mínimo que precisa tirar por mês (R$)</label>
             <input id="metaMinima" type="number" min="0" step="0.01" placeholder="Ex.: 6000" />
           </div>
           <div class="form-group">
-            <label for="metaIdeal">Faturamento ideal por mês — R$</label>
+            <label for="metaIdeal">Faturamento ideal por mês (R$)</label>
             <input id="metaIdeal" type="number" min="0" step="0.01" placeholder="Ex.: 12000" />
           </div>
           <div class="toggle">
@@ -484,15 +607,15 @@
             </label>
           </div>
 
-          <p class="error" id="error-step-4"></p>
+          <p class="error" id="error-step-3"></p>
           <div class="actions">
-            <button type="button" class="btn-secondary back-btn" data-back="3">Voltar</button>
+            <button type="button" class="btn-secondary back-btn" data-back="2">Voltar</button>
             <button type="button" class="btn-primary" id="finishBtn">Ver resultado</button>
           </div>
         </div>
       </form>
 
-      <div id="resultScreen" class="step" data-step="5" style="display:none!important">
+      <div id="resultScreen" class="step" data-step="4" style="display:none!important">
         <h2>Resultado da sua precificação</h2>
         <div class="result-box">
           <p class="result-title">Com base nas suas informações:</p>
@@ -508,12 +631,12 @@
             <li>📄 <strong>Modelo de Proposta (.docx):</strong> Layout pronto para apresentar seu cachê com autoridade para contratantes e editais.</li>
             <li>🎬 <strong>Miniaula Direta:</strong> O passo a passo para aplicar a metodologia e nunca mais queimar caixa.</li>
           </ul>
-          <button class="pay-btn" type="button" onclick="window.open('https://pay.kiwify.com.br/fytqXeI', '_blank')">Desbloquear Ferramentas de Precificação — R$ 19,90</button>
+          <button class="pay-btn" type="button" onclick="window.open('https://pay.kiwify.com.br/fytqXeI', '_blank')">Desbloquear Ferramentas de Precificação por R$ 19,90</button>
         </div>
 
         <div class="actions">
           <button type="button" class="btn-secondary" id="restartBtn">Refazer simulação</button>
-          <a href="https://api.whatsapp.com/send?text=Galera,%20achei%20esse%20simulador%20de%20precifica%C3%A7%C3%A3o%20para%20freelas%20e%20artistas%20brasileiros.%20Ele%20calcula%20sua%20hora%20m%C3%ADnima%20e%20ideal%20na%20hora.%20Vale%20muito%20a%20pena%20testar:%20https://precificafreela.vercel.app" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 15px;border-radius:12px;background:transparent;border:1px solid #2b3240;color:#9cff57;font-weight:700;font-size:0.9rem;text-decoration:none;transition:border-color 0.2s ease;">🚀 Compartilhar no WhatsApp</a>
+          <a href="https://api.whatsapp.com/send?text=Galera,%20achei%20esse%20simulador%20de%20precifica%C3%A7%C3%A3o%20para%20freelas%20e%20artistas%20brasileiros.%20Ele%20calcula%20sua%20hora%20m%C3%ADnima%20e%20ideal%20na%20hora.%20Vale%20muito%20a%20pena%20testar:%20https://precificafreela.vercel.app" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 15px;border-radius:12px;background:transparent;border:1px solid rgba(16,185,129,0.45);color:#34d399;font-weight:700;font-size:0.9rem;text-decoration:none;transition:border-color 0.2s ease;">🚀 Compartilhar no WhatsApp</a>
         </div>
       </div>
     </section>
@@ -522,7 +645,7 @@
   <script>
     (function () {
       var currentStep = 1;
-      var totalSteps = 4;
+      var totalSteps = 3;
 
       var steps = document.querySelectorAll(".step[data-step]");
       var progressBar = document.getElementById("progressBar");
@@ -576,7 +699,7 @@
       function updateProgress() {
         var pct = currentStep <= totalSteps ? (currentStep / totalSteps) * 100 : 100;
         progressBar.style.width = pct + "%";
-        stepIndicator.textContent = currentStep <= totalSteps ? ("Etapa " + currentStep + " de 4") : "Resultado";
+        stepIndicator.textContent = currentStep <= totalSteps ? ("Etapa " + currentStep + " de 3") : "Resultado";
       }
 
       function showStep(step) {
@@ -584,7 +707,7 @@
         steps.forEach(function (el) { el.classList.remove("active"); el.style.display = ""; });
         var target = getStepElement(step);
         if (target) { target.classList.add("active"); target.style.display = "block"; }
-        if (step === 5) {
+        if (step === 4) {
           resultScreen.classList.add("active");
           resultScreen.style.display = "block";
         } else {
@@ -631,24 +754,20 @@
           data.horasDia = Number(ids.horasDia.value);
           data.diasSemana = Number(ids.diasSemana.value);
           data.percentualFaturavel = Number(ids.percentualFaturavel.value);
-          if (data.horasDia < 1 || data.diasSemana < 1 || data.percentualFaturavel < 10) {
-            setError(3, "Revise os controles de capacidade de trabalho.");
-            return false;
-          }
-          return true;
-        }
-
-        if (step === 4) {
           data.metaMinima = Number(ids.metaMinima.value);
           data.metaIdeal = Number(ids.metaIdeal.value);
           data.reserva = ids.reserva.checked;
 
+          if (data.horasDia < 1 || data.diasSemana < 1 || data.percentualFaturavel < 10) {
+            setError(3, "Revise os controles de capacidade de trabalho.");
+            return false;
+          }
           if ([data.metaMinima, data.metaIdeal].some(function (n) { return Number.isNaN(n) || n <= 0; })) {
-            setError(4, "Preencha metas com valores maiores que zero.");
+            setError(3, "Preencha metas com valores maiores que zero.");
             return false;
           }
           if (data.metaIdeal < data.metaMinima) {
-            setError(4, "A meta ideal precisa ser maior ou igual ao mínimo mensal.");
+            setError(3, "A meta ideal precisa ser maior ou igual ao mínimo mensal.");
             return false;
           }
           return true;
@@ -703,13 +822,10 @@
       document.getElementById("next-2").addEventListener("click", function () {
         if (validateStep(2)) showStep(3);
       });
-      document.getElementById("next-3").addEventListener("click", function () {
-        if (validateStep(3)) showStep(4);
-      });
       document.getElementById("finishBtn").addEventListener("click", function () {
-        if (validateStep(4)) {
+        if (validateStep(3)) {
           calculate();
-          showStep(5);
+          showStep(4);
         }
       });
 
@@ -961,7 +1077,7 @@
         areaDropdown.innerHTML = matches.map(function (r) {
           var cat = RUBRICA_CATEGORIA[r];
           var catLabel = cat ? '<span style="float:right;font-size:0.72rem;color:var(--muted);">' + cat + '</span>' : '';
-          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid #2b3240;" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + catLabel + '</div>';
+          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid rgba(255,255,255,0.08);" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + catLabel + '</div>';
         }).join('');
         areaDropdown.style.display = 'block';
       });
