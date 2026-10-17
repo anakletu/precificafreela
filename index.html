@@ -731,62 +731,216 @@
       updateSliderLabels();
       updateProgress();
 
-      /* AUTOCOMPLETE ÁREA */
-      var RUBRICAS = [
-        'Acompanhamento de artista estrangeiro','Aderecista','Advogado(a)','Agenciador(a)',
-        'Alimentação - Equipe','Alimentação - Participantes','Analista de big data',
-        'Analista de inteligência artificial','Analista de produção','Analista de sistema',
-        'Antropólogo(a)','Arranjador(a)','Arte-educador(a)','Arte-finalista','Artesão(ã)',
-        'Artista circense','Artista plástico(a)','Assessor(a) de imprensa',
-        'Assistente de animação','Assistente de câmera','Assistente de cenografia',
-        'Assistente de coreografia','Assistente de diretor(a) de arte',
-        'Assistente de iluminação','Assistente de maquiador(a)','Assistente de produção',
-        'Assistente de som','Asssistente de editor(a)','Asssistente de figurino','Ator/atriz',
-        'Audiodescrição','Auxiliar de escritório','Auxiliar de serviços gerais','Bailarino(a)',
-        'Bibliotecário','Bilheteiro','Brigadistas','Cabelereiro(a)','Cantor(a)','Capista',
-        'Capoeirista','Captador(a)','Carpinteiro','Cartunista','Cenógrafo(a)','Cenotécnica(a)',
-        'Cerimonialista','Cientista social','Cinegrafista','Compositor(a)','Consultor(a)',
-        'Consultor(a) em Tecnologia','Contador','Contador(a) de história','Continuista',
-        'Contra-regra','Controller','Coordenador(a) Geral','Coordenador(a) Pedagógica',
-        'Coordenador(a) de produção','Coreógrafo(a)','Costureiro(a)','Criação de artes gráficas',
-        'Criação de audiovisual','Criação de roteiro/texto','Curador(a)','Curadoria',
-        'Dançarino(a)','Desenhista','Desenvolvedor de jogos','Desenvolvimento de roteiro',
-        'Design de animação','Designer','Designer de games','Designer de luz','Designer de som',
-        'Diagramador','Digitalização','Diretor(a) Artística(a)','Diretor(a) Cinematográfico(a)',
-        'Diretor(a) Geral','Diretor(a) Musical','Diretor(a) de arte','Diretor(a) de fotografia',
-        'Diretor(a) de imagem','Diretor(a) de palco ou cena','Diretor(a) de produção',
-        'Discotecário(a)','Dramaturgo(a)','Dublador(a)','Editor(a)','Edição de texto',
-        'Edição de áudio','Elenco','Eletricista','Ensaiador(a)','Entrevistador(a)',
-        'Equipe de Apoio - Staff','Estilista','Figurante','Finalização de áudio','Fisioterapeuta',
-        'Fonoaudiólogo(a)','Fotógrafo(a)','Fotógrafo(a) de cena','Gerente de projetos',
-        'Gestor(a) Financeiro','Gestor(a) de redes sociais','Gestão de redes sociais',
-        'Gravação em estúdio','Historiador(a)','Iluminador(a)','Ilustrador(a)','Ilustração',
-        'Impressão em braile','Influenciador(a) Digital','Instrumentista Musical',
-        'Intérprete de Libras','Locutor(a)','Luthier','Maestro(a)','Maquador(a)','Maquinista',
-        'Marceneiro(a)','Mediador(a)','Membro de comissão julgadora','Mestre de Cerimônia',
-        'Microfonista','Ministrante','Modelista','Monitor(a)','Montador(a)','Motorista',
-        'Museólogo(a)','Música(a)/Intérprete','Músico(a) de base','Músico(a) de complemento',
-        'Músico(a) de coro','Músico(a) Instrumentista','Músico(a) Intérprete','Oficineiro(a)','Operador(a) de câmera','Operador(a) de edição',
-        'Operador(a) de luz','Operador(a) de mesa de som','Operador(a) de microfone',
-        'Operador(a) de som','Operador(a) de vídeo','Operador(a) de áudio','Orquetra',
-        'Paisagista','Palestrante','Pesquisador(a)','Pianista','Pintor(a)',
-        'Preparador(a) de elenco','Preparador(a) vocal','Produtor(a) Cinematográfico(a)',
-        'Produtor(a) Executivo(a)','Produtor(a) Local','Produtor(a) cênico',
-        'Produtor(a) de Evento','Produtor(a) de Figurino','Produtor(a) de Podcast',
-        'Produção cênica','Produção de texto','Professor(a)','Professor(a) de canto',
-        'Professor(a) de cinema','Professor(a) de teatro','Profissional de marketing',
-        'Profissional de relações públicas','Programador(a)','Projeto gráfico',
-        'Projeto museológico','Publicitário(a)','Quadrinista','Recepcionista','Redator(a)',
-        'Regente','Registro em foto','Registro em vídeo','Repórter cinematográfico',
-        'Restaurador(a)','Revisão de texto','Roadie','Roteirista','Roteiro',
-        'Secretário(a) de Produção','Segurança','Seviço fotográfico para evento','Social Media',
-        'Sociólogo(a)','Sonoplasta','Supervisor(a) de edição de som','Tecelão(ã)','Tradutor(a)',
-        'Tradutor(a) e adaptador(a)','Tradução','Transmissão simultânea','Tratamento de fotos',
-        'Tratamento de áudio','Técnico(a) de audiovisual','Técnico(a) de palco',
-        'Técnico(a) de som','Técnico(a) efeitos especiais','Técnico(a) em informática',
-        'Urbanista','Vigilante','Vídeo institucional','Web designer',
-        'DJ','MC','Grafiteiro(a)','Desenvolvedor(a) de software','Gestor(a) de tráfego','Outro'
-      ];
+      /* AUTOCOMPLETE ÁREA
+         Rubricas culturais organizadas por categorias.
+         Termos genéricos e de TI foram removidos para manter o foco cultural. */
+      var RUBRICAS_POR_CATEGORIA = {
+        'Música': [
+          'Arranjador(a)',
+          'Cantor(a)',
+          'Compositor(a)',
+          'Diretor(a) Musical',
+          'DJ',
+          'Discotecário(a)',
+          'Instrumentista Musical',
+          'Luthier',
+          'Maestro(a)',
+          'MC',
+          'Músico(a)/Intérprete',
+          'Músico(a) de base',
+          'Músico(a) de complemento',
+          'Músico(a) de coro',
+          'Músico(a) Instrumentista',
+          'Músico(a) Intérprete',
+          'Orquestra',
+          'Pianista',
+          'Preparador(a) vocal',
+          'Professor(a) de canto',
+          'Regente'
+        ],
+        'Artes Cênicas': [
+          'Aderecista',
+          'Artista circense',
+          'Assistente de coreografia',
+          'Ator/atriz',
+          'Bailarino(a)',
+          'Capoeirista',
+          'Contador(a) de história',
+          'Contra-regra',
+          'Coreógrafo(a)',
+          'Dançarino(a)',
+          'Diretor(a) de palco ou cena',
+          'Dramaturgo(a)',
+          'Dublador(a)',
+          'Ensaiador(a)',
+          'Figurante',
+          'Preparador(a) de elenco',
+          'Professor(a) de teatro'
+        ],
+        'Audiovisual': [
+          'Assistente de animação',
+          'Assistente de câmera',
+          'Captador(a)',
+          'Cinegrafista',
+          'Continuista',
+          'Design de animação',
+          'Desenvolvimento de roteiro',
+          'Diretor(a) Cinematográfico(a)',
+          'Diretor(a) de fotografia',
+          'Diretor(a) de imagem',
+          'Edição de áudio',
+          'Finalização de áudio',
+          'Fotógrafo(a)',
+          'Fotógrafo(a) de cena',
+          'Gravação em estúdio',
+          'Operador(a) de câmera',
+          'Operador(a) de edição',
+          'Operador(a) de vídeo',
+          'Operador(a) de áudio',
+          'Professor(a) de cinema',
+          'Registro em foto',
+          'Registro em vídeo',
+          'Repórter cinematográfico',
+          'Roteirista',
+          'Roteiro',
+          'Serviço fotográfico para evento',
+          'Supervisor(a) de edição de som',
+          'Transmissão simultânea',
+          'Tratamento de fotos',
+          'Vídeo institucional'
+        ],
+        'Artes Visuais e Literárias': [
+          'Arte-finalista',
+          'Artesão(ã)',
+          'Artista plástico(a)',
+          'Capista',
+          'Cartunista',
+          'Costureiro(a)',
+          'Criação de artes gráficas',
+          'Criação de roteiro/texto',
+          'Desenhista',
+          'Designer',
+          'Designer de luz',
+          'Designer de som',
+          'Diagramador',
+          'Edição de texto',
+          'Escritor(a)',
+          'Estilista',
+          'Grafiteiro(a)',
+          'Ilustração',
+          'Ilustrador(a)',
+          'Modelista',
+          'Pintor(a)',
+          'Produção de texto',
+          'Projeto gráfico',
+          'Quadrinista',
+          'Redator(a)',
+          'Revisão de texto',
+          'Tecelão(ã)'
+        ],
+        'Produção e Gestão': [
+          'Agenciador(a)',
+          'Analista de produção',
+          'Assessor(a) de imprensa',
+          'Assistente de produção',
+          'Cerimonialista',
+          'Coordenador(a) Geral',
+          'Coordenador(a) de produção',
+          'Curador(a)',
+          'Curadoria',
+          'Diretor(a) Artística(a)',
+          'Diretor(a) Geral',
+          'Diretor(a) de produção',
+          'Gestor(a) de redes sociais',
+          'Gestão de redes sociais',
+          'Influenciador(a) Digital',
+          'Mestre de Cerimônia',
+          'Produtor(a) Cinematográfico(a)',
+          'Produtor(a) Executivo(a)',
+          'Produtor(a) Local',
+          'Produtor(a) cênico',
+          'Produtor(a) de Evento',
+          'Produtor(a) de Figurino',
+          'Produtor(a) de Podcast',
+          'Produção cênica',
+          'Publicitário(a)',
+          'Secretário(a) de Produção',
+          'Social Media'
+        ],
+        'Técnica': [
+          'Assistente de cenografia',
+          'Assistente de iluminação',
+          'Assistente de som',
+          'Carpinteiro',
+          'Cenógrafo(a)',
+          'Cenotécnica(a)',
+          'Eletricista',
+          'Iluminador(a)',
+          'Maquinista',
+          'Marceneiro(a)',
+          'Microfonista',
+          'Montador(a)',
+          'Operador(a) de luz',
+          'Operador(a) de mesa de som',
+          'Operador(a) de microfone',
+          'Operador(a) de som',
+          'Roadie',
+          'Sonoplasta',
+          'Técnico(a) de audiovisual',
+          'Técnico(a) de palco',
+          'Técnico(a) de som',
+          'Técnico(a) efeitos especiais'
+        ],
+        'Caracterização e Figurino': [
+          'Assistente de figurino',
+          'Assistente de maquiador(a)',
+          'Cabelereiro(a)',
+          'Maquiador(a)'
+        ],
+        'Educação, Pesquisa e Patrimônio': [
+          'Antropólogo(a)',
+          'Arte-educador(a)',
+          'Bibliotecário(a)',
+          'Cientista social',
+          'Consultor(a)',
+          'Coordenador(a) Pedagógica',
+          'Historiador(a)',
+          'Mediador(a)',
+          'Museólogo(a)',
+          'Oficineiro(a)',
+          'Palestrante',
+          'Pesquisador(a)',
+          'Professor(a)',
+          'Restaurador(a)',
+          'Sociólogo(a)'
+        ],
+        'Acessibilidade, Tradução e Apoio': [
+          'Audiodescrição',
+          'Entrevistador(a)',
+          'Impressão em braile',
+          'Intérprete de Libras',
+          'Locutor(a)',
+          'Membro de comissão julgadora',
+          'Monitor(a)',
+          'Tradução',
+          'Tradutor(a)',
+          'Tradutor(a) e adaptador(a)'
+        ]
+      };
+
+      // Lista achatada para a busca do autocomplete (com a categoria associada a cada item)
+      var RUBRICAS = [];
+      var RUBRICA_CATEGORIA = {};
+      Object.keys(RUBRICAS_POR_CATEGORIA).forEach(function (categoria) {
+        RUBRICAS_POR_CATEGORIA[categoria].forEach(function (rubrica) {
+          if (RUBRICAS.indexOf(rubrica) === -1) {
+            RUBRICAS.push(rubrica);
+            RUBRICA_CATEGORIA[rubrica] = categoria;
+          }
+        });
+      });
+      RUBRICAS.sort(function (a, b) { return a.localeCompare(b, 'pt-BR'); });
+      RUBRICAS.push('Outro');
 
       var areaSearch = document.getElementById('areaSearch');
       var areaHidden = document.getElementById('area');
@@ -805,7 +959,9 @@
         }).slice(0, 12);
         if (!matches.length) { areaDropdown.style.display = 'none'; return; }
         areaDropdown.innerHTML = matches.map(function (r) {
-          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid #2b3240;" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + '</div>';
+          var cat = RUBRICA_CATEGORIA[r];
+          var catLabel = cat ? '<span style="float:right;font-size:0.72rem;color:var(--muted);">' + cat + '</span>' : '';
+          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid #2b3240;" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + catLabel + '</div>';
         }).join('');
         areaDropdown.style.display = 'block';
       });
