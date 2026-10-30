@@ -6,28 +6,31 @@
   <title>PrecificaFreela</title>
   <style>
     :root {
-      /* Paleta mantida: preto/cinza escuro + verde esmeralda */
-      --bg: #090a0f;
-      --bg-2: #0d0f17;
-      --emerald: #10b981;
-      --emerald-soft: #34d399;
-      --emerald-strong: #059669;
-      --accent: var(--emerald);
-      --accent-2: #34d399;
-      --text: #e8ebf2;
-      --muted: #9aa4b5;
-      --danger: #ff6a6a;
+      /* Identidade visual: ciano + roxo/magenta com glow (sem verde) */
+      --bg: #070610;
+      --bg-2: #0b0a1a;
+      --cyan: #22d3ee;
+      --cyan-soft: #67e8f9;
+      --cyan-strong: #06b6d4;
+      --purple: #a855f7;
+      --magenta: #d946ef;
+      --accent: var(--cyan);
+      --accent-2: var(--magenta);
+      --text: #eaf0ff;
+      --muted: #9aa0c0;
+      --danger: #ff6a8a;
       /* Vidro (glassmorphism) */
-      --glass-bg: rgba(20, 24, 33, 0.55);
+      --glass-bg: rgba(18, 16, 38, 0.5);
       --glass-bg-soft: rgba(255, 255, 255, 0.04);
       --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-border-strong: rgba(16, 185, 129, 0.45);
+      --glass-border-strong: rgba(34, 211, 238, 0.5);
       --glass-blur: 18px;
-      --field-bg: rgba(9, 10, 15, 0.5);
-      --field-border: rgba(255, 255, 255, 0.1);
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-      --shadow-emerald: 0 10px 30px rgba(16, 185, 129, 0.22);
-      --radius: 18px;
+      --field-bg: rgba(10, 8, 24, 0.5);
+      --field-border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+      --glow-cyan: 0 0 28px rgba(34, 211, 238, 0.45);
+      --glow-magenta: 0 0 28px rgba(217, 70, 239, 0.4);
+      --radius: 20px;
       --radius-sm: 12px;
     }
 
@@ -38,6 +41,7 @@
     html {
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
     }
 
     body {
@@ -45,12 +49,10 @@
       font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 32px 14px;
+      padding: 0;
       position: relative;
       background-color: var(--bg);
-      background-image: url('fundoprecifica.jpg');
+      background-image: url('assets/fundoprecifica.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -58,9 +60,7 @@
       overflow-x: hidden;
     }
 
-    /* Camada escura translúcida sobre a imagem de fundo,
-       garantindo contraste e legibilidade dos cartões e textos.
-       Mantém os brilhos esmeralda sutis da paleta. */
+    /* Camada escura translúcida + brilhos ciano/magenta sobre a imagem */
     body::before {
       content: "";
       position: fixed;
@@ -68,119 +68,216 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(42rem 42rem at 85% -10%, rgba(16, 185, 129, 0.14), transparent 60%),
-        radial-gradient(38rem 38rem at 0% 110%, rgba(16, 185, 129, 0.1), transparent 55%),
-        linear-gradient(180deg, rgba(9, 10, 15, 0.82), rgba(9, 10, 15, 0.9) 55%, rgba(9, 10, 15, 0.94));
+        radial-gradient(48rem 48rem at 82% -6%, rgba(217, 70, 239, 0.22), transparent 60%),
+        radial-gradient(44rem 44rem at 2% 108%, rgba(34, 211, 238, 0.18), transparent 58%),
+        radial-gradient(30rem 30rem at 50% 50%, rgba(168, 85, 247, 0.1), transparent 70%),
+        linear-gradient(180deg, rgba(7, 6, 16, 0.82), rgba(7, 6, 16, 0.9) 55%, rgba(7, 6, 16, 0.95));
+    }
+
+    /* Em telas pequenas, background-attachment:fixed causa falhas (iOS);
+       trocamos por scroll e garantimos cobertura responsiva. */
+    @media (max-width: 760px) {
+      body {
+        background-attachment: scroll;
+      }
     }
 
     .app {
       width: 100%;
-      max-width: 760px;
+      max-width: 820px;
+      margin: 0 auto;
       position: relative;
       z-index: 1;
-      animation: fade-up 0.5s ease both;
+      padding: 40px 16px 80px;
     }
 
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 72vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 0 28px;
     }
 
-    .header {
-      margin-bottom: 20px;
+    .hero img {
+      height: 108px;
+      max-width: 100%;
+      object-fit: contain;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 0 22px rgba(34, 211, 238, 0.45));
     }
 
-    .title {
-      margin: 0 0 8px;
-      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-      letter-spacing: 0.3px;
+    .hero-title {
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 5vw, 3rem);
       font-weight: 800;
+      letter-spacing: 0.4px;
+      line-height: 1.1;
+      background: linear-gradient(100deg, var(--cyan-soft), #fff 40%, var(--magenta));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
     }
 
     .subtitle {
-      margin: 0;
+      margin: 0 auto;
       color: var(--muted);
-      font-size: 0.98rem;
-      letter-spacing: 0.2px;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      max-width: 44ch;
+      line-height: 1.5;
+    }
+
+    .scroll-hint {
+      margin-top: 40px;
+      color: var(--cyan-soft);
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.85;
+    }
+
+    .scroll-hint span.chev {
+      width: 14px;
+      height: 14px;
+      border-right: 2px solid var(--cyan);
+      border-bottom: 2px solid var(--cyan);
+      transform: rotate(45deg);
+      animation: bob 1.6s ease-in-out infinite;
+      box-shadow: 2px 2px 10px rgba(34, 211, 238, 0.5);
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.4; }
+      50% { transform: rotate(45deg) translate(3px, 3px); opacity: 1; }
+    }
+
+    /* ===== PROGRESSO (sticky no topo) ===== */
+    .progress-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 12px 0 14px;
+      margin-bottom: 8px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(7, 6, 16, 0.75), rgba(7, 6, 16, 0));
     }
 
     .progress-wrap {
       background: var(--glass-bg-soft);
       border: 1px solid var(--glass-border);
       border-radius: 999px;
-      height: 12px;
+      height: 10px;
       overflow: hidden;
-      margin: 18px 0 22px;
-      -webkit-backdrop-filter: blur(8px);
-      backdrop-filter: blur(8px);
     }
 
     .progress-bar {
       height: 100%;
-      width: 25%;
+      width: 0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald), var(--emerald-soft));
-      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
-      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(90deg, var(--cyan-strong), var(--cyan), var(--purple), var(--magenta));
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.6);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .step-indicator {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       color: var(--muted);
-      margin-bottom: 16px;
-      letter-spacing: 0.3px;
+      margin-top: 8px;
+      letter-spacing: 0.4px;
+      text-align: center;
     }
 
-    /* Cartão com efeito glassmorphism */
-    .card {
+    /* ===== ETAPAS (reveladas na rolagem) ===== */
+    .steps-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    .step {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
+      padding: 22px;
       position: relative;
       -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
       backdrop-filter: blur(var(--glass-blur)) saturate(140%);
       overflow: hidden;
+      /* Estado inicial da revelação na rolagem */
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease, max-height 0.6s ease, filter 0.4s ease;
     }
 
-    .card::before {
+    .step::before {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: inherit;
       padding: 1px;
-      background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), rgba(16, 185, 129, 0.18) 45%, transparent 70%);
+      background: linear-gradient(140deg, rgba(34, 211, 238, 0.4), rgba(217, 70, 239, 0.3) 55%, transparent 75%);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       pointer-events: none;
     }
 
-    .step {
-      display: none !important;
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .step.active {
-      display: block !important;
+    /* Revelado ao entrar na viewport */
+    .step.revealed {
       opacity: 1;
-      visibility: visible;
-      animation: step-in 0.35s ease both;
+      transform: translateY(0);
     }
 
-    @keyframes step-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Bloqueada: visível, porém esmaecida e não interativa até a etapa anterior ser validada */
+    .step.locked {
+      filter: grayscale(0.4) brightness(0.6);
+      pointer-events: none;
+    }
+
+    .step.locked .lock-note {
+      display: block;
+    }
+
+    .lock-note {
+      display: none;
+      margin-top: 14px;
+      font-size: 0.86rem;
+      color: var(--cyan-soft);
+      opacity: 0.85;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-right: 12px;
+      color: #04121a;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      box-shadow: var(--glow-cyan);
     }
 
     .step h2 {
-      margin-top: 4px;
-      margin-bottom: 18px;
-      font-size: 1.3rem;
+      margin: 2px 0 18px;
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
     }
 
     .form-group {
@@ -191,7 +288,7 @@
     .group-label {
       display: block;
       margin-bottom: 8px;
-      color: #dbe0ec;
+      color: #d6dbf5;
       font-weight: 600;
       font-size: 0.94rem;
     }
@@ -214,15 +311,15 @@
 
     select::placeholder,
     input::placeholder {
-      color: #6b7384;
+      color: #6b6f90;
     }
 
     select:focus,
     input[type="number"]:focus,
     input[type="text"]:focus {
       border-color: var(--glass-border-strong);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
-      background: rgba(9, 10, 15, 0.72);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18), var(--glow-cyan);
+      background: rgba(10, 8, 24, 0.75);
     }
 
     .radio-grid {
@@ -241,16 +338,16 @@
       cursor: pointer;
       -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
-      transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+      transition: border-color 0.2s ease, background 0.2s ease;
     }
 
     .radio-item:hover {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: rgba(16, 185, 129, 0.06);
+      border-color: rgba(34, 211, 238, 0.45);
+      background: rgba(34, 211, 238, 0.07);
     }
 
     .radio-item input {
-      accent-color: var(--emerald);
+      accent-color: var(--cyan);
       width: 18px;
       height: 18px;
     }
@@ -265,12 +362,13 @@
       gap: 8px;
       margin-bottom: 10px;
       font-size: 0.92rem;
-      color: #c7cedd;
+      color: #c4c9e6;
     }
 
     .slider-value {
-      color: var(--emerald-soft);
+      color: var(--cyan-soft);
       font-weight: 700;
+      text-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
     }
 
     input[type="range"] {
@@ -279,9 +377,9 @@
       -webkit-appearance: none;
       height: 7px;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald), var(--emerald-soft));
+      background: linear-gradient(90deg, var(--cyan-strong), var(--cyan), var(--purple), var(--magenta));
       outline: none;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -291,8 +389,8 @@
       height: 20px;
       border-radius: 50%;
       background: #fff;
-      border: 2px solid #0b1a14;
-      box-shadow: 0 0 0 3px var(--emerald);
+      border: 2px solid #0a1a2b;
+      box-shadow: 0 0 0 3px var(--cyan), 0 0 14px rgba(34, 211, 238, 0.7);
       cursor: pointer;
       transition: transform 0.15s ease;
     }
@@ -306,8 +404,8 @@
       height: 20px;
       border-radius: 50%;
       background: #fff;
-      border: 2px solid #0b1a14;
-      box-shadow: 0 0 0 3px var(--emerald);
+      border: 2px solid #0a1a2b;
+      box-shadow: 0 0 0 3px var(--cyan);
       cursor: pointer;
     }
 
@@ -361,9 +459,9 @@
     }
 
     .switch input:checked + .slider-switch {
-      background-color: var(--emerald-strong);
+      background: linear-gradient(90deg, var(--cyan-strong), var(--magenta));
       border-color: transparent;
-      box-shadow: 0 0 14px rgba(16, 185, 129, 0.55);
+      box-shadow: var(--glow-cyan);
     }
 
     .switch input:checked + .slider-switch:before {
@@ -380,7 +478,7 @@
     button {
       border: none;
       border-radius: var(--radius-sm);
-      padding: 13px 16px;
+      padding: 13px 18px;
       font-weight: 700;
       cursor: pointer;
       font-size: 0.95rem;
@@ -391,27 +489,15 @@
       transform: translateY(-1px);
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--glass-border);
-      color: #d7deef;
-      -webkit-backdrop-filter: blur(6px);
-      backdrop-filter: blur(6px);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
     .btn-primary {
-      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald));
-      color: #04140d;
+      background: linear-gradient(90deg, var(--cyan-strong), var(--purple), var(--magenta));
+      color: #fff;
       margin-left: auto;
-      box-shadow: var(--shadow-emerald);
+      box-shadow: var(--glow-cyan);
     }
 
     .btn-primary:hover {
-      box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 14px 36px rgba(34, 211, 238, 0.45), var(--glow-magenta);
     }
 
     .btn-primary:disabled {
@@ -428,6 +514,7 @@
       min-height: 1.2em;
     }
 
+    /* ===== RESULTADO ===== */
     .result-box {
       text-align: center;
       padding: 8px 0 2px;
@@ -447,13 +534,13 @@
     }
 
     .price span {
-      color: var(--emerald-soft);
-      text-shadow: 0 0 18px rgba(16, 185, 129, 0.45);
+      color: var(--cyan-soft);
+      text-shadow: 0 0 20px rgba(34, 211, 238, 0.55);
     }
 
     .motivation {
       margin-top: 14px;
-      color: #ced5e6;
+      color: #ced3ee;
       font-size: 1rem;
       line-height: 1.5;
     }
@@ -476,26 +563,45 @@
 
     .paywall ul {
       margin: 0 0 16px 18px;
-      color: #d1d8e8;
+      color: #d1d6ee;
       padding: 0;
       line-height: 1.5;
     }
 
     .pay-btn {
       width: 100%;
-      background: linear-gradient(90deg, var(--emerald-strong), var(--emerald-soft));
-      color: #04140d;
+      background: linear-gradient(90deg, var(--purple), var(--magenta), var(--cyan));
+      color: #fff;
       font-size: 0.98rem;
-      box-shadow: var(--shadow-emerald);
+      box-shadow: var(--glow-magenta);
     }
 
     .pay-btn:hover {
-      box-shadow: 0 14px 36px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 14px 36px rgba(217, 70, 239, 0.45);
     }
 
-    @media (min-width: 700px) {
-      .card {
-        padding: 28px;
+    .share-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--glass-border-strong);
+      color: var(--cyan-soft);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .share-link:hover {
+      box-shadow: var(--glow-cyan);
+    }
+
+    @media (min-width: 760px) {
+      .step {
+        padding: 30px;
       }
     }
   </style>
@@ -510,128 +616,131 @@
 </head>
 <body>
   <main class="app">
-    <header class="header">
-      <img src="https://github.com/anakletu/precificafreela/blob/main/logo.png?raw=true" alt="PrecificaFreela" style="height:100px;max-width:100%;object-fit:contain;margin-bottom:6px;" />
-      <p class="subtitle">Simulador de precificação para freelancers brasileiros</p>
-    </header>
+    <section class="hero">
+      <img src="https://github.com/anakletu/precificafreela/blob/main/logo.png?raw=true" alt="PrecificaFreela" />
+      <h1 class="hero-title">Precifique seu trabalho<br />com confiança</h1>
+      <p class="subtitle">Simulador de precificação para freelancers e artistas brasileiros. Role para montar seu cálculo passo a passo.</p>
+      <div class="scroll-hint">
+        Comece aqui
+        <span class="chev"></span>
+      </div>
+    </section>
 
-    <div class="progress-wrap" aria-label="Progresso das etapas">
-      <div id="progressBar" class="progress-bar"></div>
+    <div class="progress-sticky">
+      <div class="progress-wrap" aria-label="Progresso das etapas">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div id="stepIndicator" class="step-indicator">Etapa 1 de 3</div>
     </div>
-    <div id="stepIndicator" class="step-indicator">Etapa 1 de 3</div>
 
-    <section class="card">
-      <form id="wizardForm" novalidate>
-        <div class="step active" data-step="1">
-          <h2>Etapa 1: Perfil</h2>
+    <form id="wizardForm" class="steps-flow" novalidate>
+      <section class="step" data-step="1">
+        <h2><span class="step-num">1</span> Perfil</h2>
 
-          <div class="form-group">
-            <label for="areaSearch">Área de atuação</label>
-            <div style="position:relative;">
-              <input
-                id="areaSearch"
-                type="text"
-                placeholder="Ex: Músico, Fotógrafo, Ator, Designer..."
-                autocomplete="off"
-                style="width:100%;background:var(--field-bg);border:1px solid var(--field-border);color:var(--text);padding:13px 14px;border-radius:12px;outline:none;font-size:0.98rem;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color 0.2s ease,box-shadow 0.2s ease;"
-              />
-              <div id="areaDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:rgba(13,15,23,0.92);border:1px solid var(--glass-border);border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow-y:auto;z-index:100;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,0.5);"></div>
-            </div>
-            <input type="hidden" id="area" />
-            <p style="margin:6px 0 0;font-size:0.82rem;color:var(--muted);">Digite para buscar na lista de rubricas culturais ou escreva livremente.</p>
+        <div class="form-group">
+          <label for="areaSearch">Área de atuação</label>
+          <div style="position:relative;">
+            <input
+              id="areaSearch"
+              type="text"
+              placeholder="Ex: Músico, Fotógrafo, Ator, Designer..."
+              autocomplete="off"
+            />
+            <div id="areaDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:rgba(11,10,26,0.94);border:1px solid var(--glass-border);border-top:none;border-radius:0 0 12px 12px;max-height:220px;overflow-y:auto;z-index:100;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 18px 40px rgba(0,0,0,0.55);"></div>
           </div>
+          <input type="hidden" id="area" />
+          <p style="margin:6px 0 0;font-size:0.82rem;color:var(--muted);">Digite para buscar na lista de rubricas culturais ou escreva livremente.</p>
+        </div>
 
-          <div class="form-group">
-            <span class="group-label">Tempo de experiência</span>
-            <div class="radio-grid">
-              <label class="radio-item"><input type="radio" name="experiencia" value="Menos de 1 ano" /> Menos de 1 ano</label>
-              <label class="radio-item"><input type="radio" name="experiencia" value="1-3 anos" /> 1-3 anos</label>
-              <label class="radio-item"><input type="radio" name="experiencia" value="Mais de 3 anos" /> Mais de 3 anos</label>
-            </div>
-          </div>
-
-          <p class="error" id="error-step-1"></p>
-          <div class="actions">
-            <button type="button" class="btn-secondary" disabled>Voltar</button>
-            <button type="button" class="btn-primary" id="next-1">Continuar</button>
+        <div class="form-group">
+          <span class="group-label">Tempo de experiência</span>
+          <div class="radio-grid">
+            <label class="radio-item"><input type="radio" name="experiencia" value="Menos de 1 ano" /> Menos de 1 ano</label>
+            <label class="radio-item"><input type="radio" name="experiencia" value="1-3 anos" /> 1-3 anos</label>
+            <label class="radio-item"><input type="radio" name="experiencia" value="Mais de 3 anos" /> Mais de 3 anos</label>
           </div>
         </div>
 
-        <div class="step" data-step="2">
-          <h2>Etapa 2: Custos mensais</h2>
-          <div class="form-group">
-            <label for="custosVida">Custos de vida (aluguel, alimentação, transporte) em R$</label>
-            <input id="custosVida" type="number" min="0" step="0.01" placeholder="Ex.: 3500" />
-          </div>
-          <div class="form-group">
-            <label for="custosFerramentas">Custos de produção, equipamentos ou deslocamento (R$)</label>
-            <input id="custosFerramentas" type="number" min="0" step="0.01" placeholder="Ex.: 450" />
-          </div>
-          <div class="form-group">
-            <label for="outrasDespesas">Outras despesas fixas do trabalho em R$</label>
-            <input id="outrasDespesas" type="number" min="0" step="0.01" placeholder="Ex.: 300" />
-          </div>
+        <p class="error" id="error-step-1"></p>
+        <div class="actions">
+          <button type="button" class="btn-primary" id="next-1">Continuar</button>
+        </div>
+      </section>
 
-          <p class="error" id="error-step-2"></p>
-          <div class="actions">
-            <button type="button" class="btn-secondary back-btn" data-back="1">Voltar</button>
-            <button type="button" class="btn-primary" id="next-2">Continuar</button>
-          </div>
+      <section class="step locked" data-step="2">
+        <h2><span class="step-num">2</span> Custos mensais</h2>
+        <div class="form-group">
+          <label for="custosVida">Custos de vida (aluguel, alimentação, transporte) em R$</label>
+          <input id="custosVida" type="number" min="0" step="0.01" placeholder="Ex.: 3500" />
+        </div>
+        <div class="form-group">
+          <label for="custosFerramentas">Custos de produção, equipamentos ou deslocamento (R$)</label>
+          <input id="custosFerramentas" type="number" min="0" step="0.01" placeholder="Ex.: 450" />
+        </div>
+        <div class="form-group">
+          <label for="outrasDespesas">Outras despesas fixas do trabalho em R$</label>
+          <input id="outrasDespesas" type="number" min="0" step="0.01" placeholder="Ex.: 300" />
         </div>
 
-        <div class="step" data-step="3">
-          <h2>Etapa 3: Capacidade e metas</h2>
-
-          <div class="slider-wrap">
-            <div class="slider-top">
-              <span>Horas de trabalho por dia</span>
-              <span class="slider-value" id="horasDiaValue">8 h</span>
-            </div>
-            <input id="horasDia" type="range" min="1" max="12" step="1" value="8" />
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-top">
-              <span>Dias trabalhados por semana</span>
-              <span class="slider-value" id="diasSemanaValue">5 dias</span>
-            </div>
-            <input id="diasSemana" type="range" min="1" max="7" step="1" value="5" />
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-top">
-              <span>% do tempo realmente faturável</span>
-              <span class="slider-value" id="percentualFaturavelValue">70%</span>
-            </div>
-            <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
-          </div>
-
-          <div class="form-group">
-            <label for="metaMinima">Mínimo que precisa tirar por mês (R$)</label>
-            <input id="metaMinima" type="number" min="0" step="0.01" placeholder="Ex.: 6000" />
-          </div>
-          <div class="form-group">
-            <label for="metaIdeal">Faturamento ideal por mês (R$)</label>
-            <input id="metaIdeal" type="number" min="0" step="0.01" placeholder="Ex.: 12000" />
-          </div>
-          <div class="toggle">
-            <span>Incluir reserva de emergência (10% do faturamento)</span>
-            <label class="switch">
-              <input id="reserva" type="checkbox" />
-              <span class="slider-switch"></span>
-            </label>
-          </div>
-
-          <p class="error" id="error-step-3"></p>
-          <div class="actions">
-            <button type="button" class="btn-secondary back-btn" data-back="2">Voltar</button>
-            <button type="button" class="btn-primary" id="finishBtn">Ver resultado</button>
-          </div>
+        <p class="error" id="error-step-2"></p>
+        <div class="actions">
+          <button type="button" class="btn-primary" id="next-2">Continuar</button>
         </div>
-      </form>
+        <p class="lock-note">Conclua a etapa anterior para liberar esta seção.</p>
+      </section>
 
-      <div id="resultScreen" class="step" data-step="4" style="display:none!important">
-        <h2>Resultado da sua precificação</h2>
+      <section class="step locked" data-step="3">
+        <h2><span class="step-num">3</span> Capacidade e metas</h2>
+
+        <div class="slider-wrap">
+          <div class="slider-top">
+            <span>Horas de trabalho por dia</span>
+            <span class="slider-value" id="horasDiaValue">8 h</span>
+          </div>
+          <input id="horasDia" type="range" min="1" max="12" step="1" value="8" />
+        </div>
+
+        <div class="slider-wrap">
+          <div class="slider-top">
+            <span>Dias trabalhados por semana</span>
+            <span class="slider-value" id="diasSemanaValue">5 dias</span>
+          </div>
+          <input id="diasSemana" type="range" min="1" max="7" step="1" value="5" />
+        </div>
+
+        <div class="slider-wrap">
+          <div class="slider-top">
+            <span>% do tempo realmente faturável</span>
+            <span class="slider-value" id="percentualFaturavelValue">70%</span>
+          </div>
+          <input id="percentualFaturavel" type="range" min="10" max="100" step="10" value="70" />
+        </div>
+
+        <div class="form-group">
+          <label for="metaMinima">Mínimo que precisa tirar por mês (R$)</label>
+          <input id="metaMinima" type="number" min="0" step="0.01" placeholder="Ex.: 6000" />
+        </div>
+        <div class="form-group">
+          <label for="metaIdeal">Faturamento ideal por mês (R$)</label>
+          <input id="metaIdeal" type="number" min="0" step="0.01" placeholder="Ex.: 12000" />
+        </div>
+        <div class="toggle">
+          <span>Incluir reserva de emergência (10% do faturamento)</span>
+          <label class="switch">
+            <input id="reserva" type="checkbox" />
+            <span class="slider-switch"></span>
+          </label>
+        </div>
+
+        <p class="error" id="error-step-3"></p>
+        <div class="actions">
+          <button type="button" class="btn-primary" id="finishBtn">Ver resultado</button>
+        </div>
+        <p class="lock-note">Conclua a etapa anterior para liberar esta seção.</p>
+      </section>
+
+      <section class="step locked" id="resultScreen" data-step="4">
+        <h2><span class="step-num">★</span> Resultado da sua precificação</h2>
         <div class="result-box">
           <p class="result-title">Com base nas suas informações:</p>
           <p class="price">Seu preço mínimo por hora: <span id="precoMinimo">R$ 0,00</span></p>
@@ -650,22 +759,20 @@
         </div>
 
         <div class="actions">
-          <button type="button" class="btn-secondary" id="restartBtn">Refazer simulação</button>
-          <a href="https://api.whatsapp.com/send?text=Galera,%20achei%20esse%20simulador%20de%20precifica%C3%A7%C3%A3o%20para%20freelas%20e%20artistas%20brasileiros.%20Ele%20calcula%20sua%20hora%20m%C3%ADnima%20e%20ideal%20na%20hora.%20Vale%20muito%20a%20pena%20testar:%20https://precificafreela.vercel.app" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 15px;border-radius:12px;background:transparent;border:1px solid rgba(16,185,129,0.45);color:#34d399;font-weight:700;font-size:0.9rem;text-decoration:none;transition:border-color 0.2s ease;">🚀 Compartilhar no WhatsApp</a>
+          <a class="share-link" href="https://api.whatsapp.com/send?text=Galera,%20achei%20esse%20simulador%20de%20precifica%C3%A7%C3%A3o%20para%20freelas%20e%20artistas%20brasileiros.%20Ele%20calcula%20sua%20hora%20m%C3%ADnima%20e%20ideal%20na%20hora.%20Vale%20muito%20a%20pena%20testar:%20https://precificafreela.vercel.app" target="_blank">🚀 Compartilhar no WhatsApp</a>
+          <button type="button" class="btn-primary" id="restartBtn">Refazer simulação</button>
         </div>
-      </div>
-    </section>
+      </section>
+    </form>
   </main>
 
   <script>
     (function () {
-      var currentStep = 1;
       var totalSteps = 3;
+      var unlockedStep = 1; // etapas de 1..unlockedStep estão liberadas
 
-      var steps = document.querySelectorAll(".step[data-step]");
       var progressBar = document.getElementById("progressBar");
       var stepIndicator = document.getElementById("stepIndicator");
-      var resultScreen = document.getElementById("resultScreen");
 
       var data = {
         area: "",
@@ -712,24 +819,29 @@
       }
 
       function updateProgress() {
-        var pct = currentStep <= totalSteps ? (currentStep / totalSteps) * 100 : 100;
+        var done = Math.min(unlockedStep - 1, totalSteps);
+        if (unlockedStep > totalSteps) done = totalSteps;
+        var pct = (done / totalSteps) * 100;
         progressBar.style.width = pct + "%";
-        stepIndicator.textContent = currentStep <= totalSteps ? ("Etapa " + currentStep + " de 3") : "Resultado";
+        if (unlockedStep > totalSteps) {
+          stepIndicator.textContent = "Resultado pronto";
+        } else {
+          stepIndicator.textContent = "Etapa " + unlockedStep + " de " + totalSteps;
+        }
       }
 
-      function showStep(step) {
-        currentStep = step;
-        steps.forEach(function (el) { el.classList.remove("active"); el.style.display = ""; });
-        var target = getStepElement(step);
-        if (target) { target.classList.add("active"); target.style.display = "block"; }
-        if (step === 4) {
-          resultScreen.classList.add("active");
-          resultScreen.style.display = "block";
-        } else {
-          resultScreen.classList.remove("active");
-          resultScreen.style.display = "none";
-        }
+      /* Libera uma etapa (remove o estado "locked"), rola até ela e atualiza o progresso */
+      function unlockStep(step) {
+        var el = getStepElement(step);
+        if (!el) return;
+        el.classList.remove("locked");
+        el.classList.add("revealed");
+        if (step > unlockedStep) unlockedStep = step;
         updateProgress();
+        // rolagem suave até a etapa recém-liberada
+        setTimeout(function () {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 80);
       }
 
       function getErrorEl(step) {
@@ -832,27 +944,27 @@
       }
 
       document.getElementById("next-1").addEventListener("click", function () {
-        if (validateStep(1)) showStep(2);
+        if (validateStep(1)) unlockStep(2);
       });
       document.getElementById("next-2").addEventListener("click", function () {
-        if (validateStep(2)) showStep(3);
+        if (validateStep(2)) unlockStep(3);
       });
       document.getElementById("finishBtn").addEventListener("click", function () {
         if (validateStep(3)) {
           calculate();
-          showStep(4);
+          unlockStep(4);
         }
       });
 
-      document.querySelectorAll(".back-btn").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var backTo = Number(btn.getAttribute("data-back"));
-          showStep(backTo);
-        });
-      });
-
       document.getElementById("restartBtn").addEventListener("click", function () {
-        showStep(1);
+        unlockedStep = 1;
+        [2, 3, 4].forEach(function (s) {
+          var el = getStepElement(s);
+          if (el) el.classList.add("locked");
+        });
+        setError(1, ""); setError(2, ""); setError(3, "");
+        updateProgress();
+        getStepElement(1).scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
       ids.horasDia.addEventListener("input", updateSliderLabels);
@@ -861,6 +973,24 @@
 
       updateSliderLabels();
       updateProgress();
+
+      /* Scroll-reveal: fade-in das etapas conforme entram na viewport */
+      (function setupReveal() {
+        var revealEls = document.querySelectorAll(".step");
+        if (!("IntersectionObserver" in window)) {
+          revealEls.forEach(function (el) { el.classList.add("revealed"); });
+          return;
+        }
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        revealEls.forEach(function (el) { obs.observe(el); });
+      })();
 
       /* AUTOCOMPLETE ÁREA
          Rubricas culturais organizadas por categorias.
@@ -1092,7 +1222,7 @@
         areaDropdown.innerHTML = matches.map(function (r) {
           var cat = RUBRICA_CATEGORIA[r];
           var catLabel = cat ? '<span style="float:right;font-size:0.72rem;color:var(--muted);">' + cat + '</span>' : '';
-          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#e8ebf2;border-bottom:1px solid rgba(255,255,255,0.08);" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + catLabel + '</div>';
+          return '<div style="padding:10px 14px;cursor:pointer;font-size:0.93rem;color:#eaf0ff;border-bottom:1px solid rgba(255,255,255,0.08);" onmousedown="selecionaArea(\'' + r.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + '\')">' + r + catLabel + '</div>';
         }).join('');
         areaDropdown.style.display = 'block';
       });
